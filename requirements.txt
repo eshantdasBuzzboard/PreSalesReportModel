@@ -1,0 +1,12 @@
+langchain
+langchain_openai
+python-dotenv
+
+
+openpyxl
+wordcloud 
+matplotlib
+pandas
+streamlit 
+fpdf
+reportlab
