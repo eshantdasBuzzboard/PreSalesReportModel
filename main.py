@@ -5,23 +5,50 @@ from presale_strategy_report import generate_report_async, generate_slide_8_cont
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY
 import io
 import json
 
 st.title("Presale Strategy Report Generator")
 
+
+# ---------- Helpers ----------
+def ensure_dict(maybe_json):
+    """Return a dict from possibly a dict/JSON string/None/'N/A'/other."""
+    if isinstance(maybe_json, dict):
+        return maybe_json
+    if isinstance(maybe_json, str):
+        try:
+            return json.loads(maybe_json)
+        except Exception:
+            return {}
+    return {}
+
+
+def append_target_to_full_report(current_report: str, target_audience: str) -> str:
+    current_report = current_report or ""
+    return f"{current_report}\n\n## Target Audience\n\n{target_audience}".strip()
+
+
 # File uploader
 uploaded_file = st.file_uploader("Upload your .txt or .py file", type=["txt", "py"])
 
 if uploaded_file is not None:
     # Read the file
-    content = uploaded_file.read().decode("utf-8")
+    try:
+        content = uploaded_file.read().decode("utf-8")
+    except Exception as e:
+        st.error(f"Could not read uploaded file: {e}")
+        st.stop()
 
     # Execute the code to load variables
     namespace = {}
-    exec(content, namespace)
+    try:
+        exec(content, namespace)
+    except Exception as e:
+        st.error(f"Error executing uploaded file: {e}")
+        st.stop()
 
     # Store all variables
     seller_company_name = namespace.get("seller_company_name", "N/A")
@@ -125,6 +152,9 @@ if uploaded_file is not None:
                     executive_summary,
                 ) = result
 
+                # Normalize report_json into a dict now so downstream always works
+                report_json = ensure_dict(report_json)
+
                 st.success("✅ Report generated successfully!")
 
                 # Store in session state for PDF generation
@@ -143,14 +173,41 @@ if uploaded_file is not None:
             except Exception as e:
                 st.error(f"❌ Error generating report: {str(e)}")
 
-        # Generate Slide 8 content
         with st.spinner("Generating Target Audience content..."):
             try:
                 target_audience = asyncio.run(
                     generate_slide_8_content(slide_8_input_content)
                 )
-                st.session_state.report_data["target_audience"] = target_audience
-                st.success("✅ Target Audience content generated successfully!")
+
+                # Ensure report_data exists
+                if "report_data" not in st.session_state or not isinstance(
+                    st.session_state.report_data, dict
+                ):
+                    st.session_state.report_data = {}
+
+                # Try to parse target_audience as JSON (so it’s structured, not a string)
+                try:
+                    parsed_target_audience = json.loads(target_audience)
+                except Exception:
+                    parsed_target_audience = (
+                        target_audience  # leave as string if not valid JSON
+                    )
+
+                # Ensure report_json is a dict
+                rjson = ensure_dict(st.session_state.report_data.get("report_json"))
+                rjson["target_audience"] = parsed_target_audience
+                st.session_state.report_data["report_json"] = rjson
+
+                # Also store separately for UI/PDF
+                st.session_state.report_data["target_audience"] = parsed_target_audience
+
+                # Append to full report text
+                current_report = st.session_state.report_data.get("report", "")
+                st.session_state.report_data["report"] = append_target_to_full_report(
+                    current_report, target_audience
+                )
+
+                st.success("✅ Target Audience content added as structured JSON!")
             except Exception as e:
                 st.error(f"❌ Error generating target audience: {str(e)}")
 
@@ -160,12 +217,6 @@ if uploaded_file is not None:
         st.header("📊 Report Results")
 
         data = st.session_state.report_data
-
-        # Executive Summary
-        st.subheader("📄 Executive Summary")
-        st.write(data.get("executive_summary", "N/A"))
-
-        st.markdown("---")
 
         # Business Overview
         st.subheader("🏢 Business Overview")
@@ -203,6 +254,19 @@ if uploaded_file is not None:
 
         st.markdown("---")
 
+        # Full Report
+        st.subheader("📑 Full Report")
+        with st.expander("Click to view full report"):
+            st.write(data.get("report", "N/A"))
+
+        st.markdown("---")
+
+        # Executive Summary
+        st.subheader("📄 Executive Summary")
+        st.write(data.get("executive_summary", "N/A"))
+
+        st.markdown("---")
+
         # Target Audience
         if "target_audience" in data:
             st.subheader("👥 Target Audience")
@@ -210,15 +274,11 @@ if uploaded_file is not None:
 
             st.markdown("---")
 
-        # Full Report
-        st.subheader("📑 Full Report")
-        with st.expander("Click to view full report"):
-            st.write(data.get("report", "N/A"))
-
         # Report JSON
         st.subheader("🔧 Report JSON")
         with st.expander("Click to view report JSON"):
-            st.json(data.get("report_json", {}))
+            # ensure dict for visual consistency
+            st.json(ensure_dict(data.get("report_json", {})))
 
         # PDF Download Button
         st.markdown("---")
@@ -295,19 +355,21 @@ if uploaded_file is not None:
 
             # Add sections
             sections = [
-                ("Executive Summary", data.get("executive_summary")),
                 ("Business Overview", data.get("Business_Overview")),
                 ("SWOT Analysis", data.get("SWOT_Analysis")),
                 ("Customer Sentiment", data.get("Customer_Sentiment")),
                 ("Competitive Benchmarking", data.get("Competitive_Benchmarking")),
                 ("ROI Impact Projections", data.get("ROI_Impact_Projections")),
                 ("Recommendations", data.get("Recommendations")),
+                ("Full Report", data.get("report")),
+                ("Executive Summary", data.get("executive_summary")),
             ]
 
             if "target_audience" in data:
                 sections.append(("Target Audience", data.get("target_audience")))
 
-            sections.append(("Full Report", data.get("report")))
+            # Add Report JSON as the last section
+            sections.append(("Report JSON", ensure_dict(data.get("report_json"))))
 
             for section_title, section_content in sections:
                 # Add section heading
