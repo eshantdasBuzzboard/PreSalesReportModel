@@ -10,3 +10,4 @@ pandas
 streamlit 
 fpdf
 reportlab
+nest_asyncio
