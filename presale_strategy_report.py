@@ -442,7 +442,7 @@ async def generate_report_async(
     Market Position: ,
     Unique Selling Proposition:
     
-    **Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand.
+    **Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand. Please dont add a seperate section on this just make the overall output in understandle easy english. Please dont add a seperate section on this just make the overall output in understandle easy english
     """
 
     SWOT_Analysis_prompt = f"""
@@ -465,7 +465,7 @@ async def generate_report_async(
     Opportunities:
     Threats:
     
-    **Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand.
+    **Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand. Please dont add a seperate section on this just make the overall output in understandle easy english.Please dont add a seperate section on this just make the overall output in understandle easy english
 
     """
 
@@ -495,7 +495,7 @@ async def generate_report_async(
     "Google: Rating: ": "Google: Rating: "
 }
 
-    **Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand.
+    **Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand. Please dont add a seperate section on this just make the overall output in understandle easy english.Please dont add a seperate section on this just make the overall output in understandle easy english
     Also very importantly make sure 
     Key Positive Drivers - (character limit of 200 char)
     Key Negative Drivers - (character limit of 200 char)
@@ -551,7 +551,7 @@ async def generate_report_async(
                           }
                       ]
                       
-    **Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand.
+    **Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand.Please dont add a seperate section on this just make the overall output in understandle easy english.Please dont add a seperate section on this just make the overall output in understandle easy english
     """
     )
 
@@ -586,7 +586,7 @@ async def generate_report_async(
 
     Output format: Provide 3 heading lines and two content point lines for each heading.
     
-    **Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand.
+    **Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand. Please dont add a seperate section on this just make the overall output in understandle easy english.Please dont add a seperate section on this just make the overall output in understandle easy english
 
     """
     )
@@ -620,7 +620,7 @@ async def generate_report_async(
 
     Output: Strictly  Provide 3 Recommendation points.
     
-    **Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand.
+    **Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand. Please dont add a seperate section on this just make the overall output in understandle easy english.Please dont add a seperate section on this just make the overall output in understandle easy english
     """
 
     response = await asyncio.to_thread(
@@ -700,7 +700,7 @@ Create a **Pre-Sales Reputation Analysis Report** for the prospect company using
 **Constraints:**
 - **Word Limit:** Do not exceed **1,000 words** in the final output.
 
-**Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand.
+**Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand. Please dont add a seperate section on this just make the overall output in understandle easy english.Please dont add a seperate section on this just make the overall output in understandle easy english
 
 ---
 """
@@ -740,7 +740,7 @@ Create a **Pre-Sales Reputation Analysis Report** for the prospect company using
      - **Projected Impact:**
 **Please ensure you adhere strictly to all instructions and do not omit any details. Each point must be clear, concise, and leave a strong impression.**
 
-**Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand.
+**Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand. Please dont add a seperate section on this just make the overall output in understandle easy english.Please dont add a seperate section on this just make the overall output in understandle easy english. Please dont add a seperate section on this just make the overall output in understandle easy english.Please dont add a seperate section on this just make the overall output in understandle easy english
 ---
 **Report:**
 {report}
@@ -917,7 +917,7 @@ IMPORTANT: The examples provided are for reference only to understand the format
             <content>
             {content}
             </content
-            **Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand.
+            **Important:** Write your output in simple, clear, and easily understandable English. Avoid complex vocabulary and jargon. Use straightforward sentences that anyone can understand. Please dont add a seperate section on this just make the overall output in understandle easy english.Please dont add a seperate section on this just make the overall output in understandle easy english
             """
     response = client.responses.parse(
         model="gpt-4.1",
